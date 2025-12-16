@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API документация</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .endpoint { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .method { display: inline-block; padding: 5px 10px; background: #007bff; color: white; border-radius: 3px; }
+        .url { font-family: monospace; background: #e9ecef; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>API документация</h1>
+    <a href="/">← На главную</a>
+
+    <div class="endpoint">
+        <span class="method">POST</span>
+        <span class="url">/api/apply-correction/</span>
+        <p>Применить корректировку к объекту</p>
+        <h4>Пример запроса:</h4>
+        <pre>
+{
+    "subject": {
+        "value": "Программирование",
+        "context": [
+            {"key": "факультет", "value": "ИТ", "important": true}
+        ]
+    },
+    "hypotheses": [
+        {
+            "value": "Программирование (Python)", 
+            "score": 0.8
+        }
+    ],
+    "scope_id": 1
+}
+        </pre>
+    </div>
+</body>
+</html>

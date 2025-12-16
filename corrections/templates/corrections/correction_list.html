@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.1">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!-- corrections/templates/corrections/correction_list.html --&gt;</span></p>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="ru"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Таблица корректировок&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: Arial, sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f5f5f5;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.container {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 1400px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0 auto;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 2px 10px rgba(0,0,0,0.1);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.header {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: between;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding-bottom: 15px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: 2px solid #e0e0e0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.filters {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f8f9fa;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 15px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.filter-group {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: inline-block;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-right: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.filter-group label {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: bold;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-right: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>select, input, button {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 8px 12px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 4px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-right: 10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #007bff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #0056b3;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-collapse: collapse;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table th,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table td {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 12px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: left;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid #ddd;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table th {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f8f9fa;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: bold;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>user-select: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table th:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #e9ecef;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.corrections-table tr:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f8f9fa;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>/* Цвета статусов */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.status-pending {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #ffe6e6 !important;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.status-approved {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #e6ffe6 !important;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.status-invalid {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #f0f0f0 !important;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #666;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.action-icons {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.action-btn {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 16px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.action-btn:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transform: scale(1.2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.monospace {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: 'Courier New', monospace;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f8f8f8;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 2px 4px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 3px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.back-link {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: inline-block;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #007bff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.back-link:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: underline;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;a href="/" class="back-link"&gt;← На главную&lt;/a&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="header"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h1&gt;📋 Таблица корректировок&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="loadSampleData()"&gt;📥 Загрузить тестовые данные&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="location.reload()"&gt;🔄 Обновить&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="filters"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="filter-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;label&gt;Статус:&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;select id="status-filter" multiple&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="0"&gt;🟡 PENDING&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="1"&gt;🟢 APPROVED&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="2"&gt;🔴 INVALID&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="filter-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;label&gt;Scope ID:&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="scope-filter" value="0" min="0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="filter-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;label&gt;Сортировка:&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;select id="sort-filter"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="-updated_at"&gt;По дате обновления (новые)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="updated_at"&gt;По дате обновления (старые)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="subject__value"&gt;По объекту (А-Я)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="-subject__value"&gt;По объекту (Я-А)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="applyFilters()"&gt;Применить фильтры&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="clearFilters()"&gt;Очистить&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;table class="corrections-table" id="corrections-table"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;thead&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th data-sort="subject__value"&gt;Subject ▾&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="50"&gt;Действие&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Замена&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="120"&gt;Статус&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="100"&gt;Scope&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="150" data-sort="created_at"&gt;Создана ▾&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="150" data-sort="updated_at"&gt;Обновлена ▾&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;th width="120"&gt;Действия&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/thead&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;tbody id="corrections-body"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{% for correction in corrections %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;tr class="{{ correction.get_status_color }}"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="monospace" title="{{ correction.subject.value }}"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{{ correction.subject.value|truncatechars:60 }}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td style="text-align: center; font-size: 18px;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>{{ correction.get_action_icon }}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>{% with optimal=correction.get_optimal_hypothesis %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% if optimal != correction.subject %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="monospace" title="{{ optimal.value }}"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>{{ optimal.value|truncatechars:60 }}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% else %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;span style="color: #999;"&gt;—&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% endif %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>{% endwith %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;{{ correction.get_status_display }}&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;{{ correction.scope_id }}&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;{{ correction.created_at|date:"d.m.Y H:i" }}&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;{{ correction.updated_at|date:"d.m.Y H:i" }}&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="action-icons"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% if correction.status == correction.STATUS_PENDING %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;button class="action-btn" title="Подтвердить" onclick="approveCorrection({{ correction.id }})"&gt;✅&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% endif %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button class="action-btn" title="Редактировать" onclick="editCorrection({{ correction.id }})"&gt;⚙️&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% if correction.status != correction.STATUS_INVALID %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;button class="action-btn" title="Аннулировать" onclick="invalidateCorrection({{ correction.id }})"&gt;🚫&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% else %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;button class="action-btn" title="Восстановить" onclick="restoreCorrection({{ correction.id }})"&gt;🔄&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>{% endif %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{% empty %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;td colspan="8" style="text-align: center; padding: 40px; color: #666;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>📝 Нет корректировок. Загрузите тестовые данные или создайте через админ-панель.</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{% endfor %}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/tbody&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/table&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function applyFilters() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const statusFilter = Array.from(document.getElementById('status-filter').selectedOptions)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>.map(opt =&gt; opt.value);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const scopeFilter = document.getElementById('scope-filter').value;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const sortFilter = document.getElementById('sort-filter').value;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Здесь будет AJAX запрос для фильтрации</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>alert(`Фильтры применены:\nСтатусы: ${statusFilter.join(', ')}\nScope: ${scopeFilter}\nСортировка: ${sortFilter}`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function clearFilters() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('status-filter').selectedIndex = -1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('scope-filter').value = '0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('sort-filter').value = '-updated_at';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function loadSampleData() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (confirm('Загрузить тестовые данные? Это создаст несколько примеров корректировок.')) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// Здесь будет AJAX запрос для загрузки тестовых данных</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert('Тестовые данные загружены!');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>location.reload();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function approveCorrection(id) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (confirm('Подтвердить эту корректировку?')) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert(`Корректировка ${id} подтверждена`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function editCorrection(id) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>alert(`Редактирование корректировки ${id}`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function invalidateCorrection(id) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (confirm('Аннулировать эту корректировку?')) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert(`Корректировка ${id} аннулирована`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function restoreCorrection(id) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (confirm('Восстановить эту корректировку?')) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert(`Корректировка ${id} восстановлена`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Сортировка таблицы</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.querySelectorAll('th[data-sort]').forEach(th =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>th.addEventListener('click', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const sortBy = th.dataset.sort;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert(`Сортировка по: ${sortBy}`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
