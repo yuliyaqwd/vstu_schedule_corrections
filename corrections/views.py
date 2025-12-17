@@ -3,17 +3,22 @@ from django.http import HttpResponse
 from django.views import View
 from django.middleware.csrf import get_token
 from .models import Correction, Item, ContextElement
-import pandas as pd
 import os
 import tempfile
 from io import BytesIO
 from datetime import datetime
 from openpyxl import load_workbook
 from typing import List
+import html
 
-# Глобальные переменные
+# Глобальная переменная: путь к последнему загруженному .xlsx файлу
 last_uploaded_file_path = None
-last_uploaded_file_is_xlsx = True  # True = .xlsx, False = .xls
+
+
+def _highlight_spaces(text: str) -> str:
+    """Заменяет пробелы на полупрозрачные кружки · с подсветкой."""
+    escaped = html.escape(text)
+    return escaped.replace(' ', '<span class="space">·</span>')
 
 
 def home(request):
@@ -97,9 +102,10 @@ def home(request):
                     <li>Автоматическое обнаружение ошибок в расписаниях</li>
                     <li>Ручное управление правилами корректировки</li>
                     <li>Визуализация изменений и истории</li>
-                    <li>Загрузка Excel файлов с расписаниями</li>
-                    <li>Экспорт исправленных данных в Excel</li>
+                    <li>Загрузка Excel файлов в формате <strong>.xlsx</strong></li>
+                    <li>Экспорт исправленных данных в Excel <strong>с сохранением всех стилей</strong></li>
                 </ul>
+                <p><strong>Важно:</strong> Поддерживается только формат <code>.xlsx</code> (Excel 2007+).</p>
             </div>
         </div>
     </body>
@@ -116,20 +122,24 @@ class CorrectionListView(View):
             for correction in corrections:
                 status_display = correction.get_status_display()
                 status_color = self.get_status_color(correction.status)
-                hypotheses = ', '.join([h.value for h in correction.hypotheses.all()])
+                subject_value = _highlight_spaces(correction.subject.value)
+                hypotheses = ', '.join([_highlight_spaces(h.value) for h in correction.hypotheses.all()])
                 if not hypotheses:
                     hypotheses = "—"
                 table_rows += f"""
                 <tr style="{status_color}">
                     <td>{correction.id}</td>
                     <td>
-                        <div style="font-family: monospace; max-width: 300px; overflow: hidden; text-overflow: ellipsis;" 
-                             title="{correction.subject.value}">
-                            {correction.subject.value}
+                        <div class="monospace-cell" title="{html.escape(correction.subject.value)}">
+                            {subject_value}
                         </div>
                     </td>
                     <td>{status_display}</td>
-                    <td>{hypotheses}</td>
+                    <td>
+                        <div class="monospace-cell" title="{', '.join([h.value for h in correction.hypotheses.all()]) or '—'}">
+                            {hypotheses}
+                        </div>
+                    </td>
                     <td>{correction.scope_id}</td>
                     <td>
                         <a href="/admin/corrections/correction/{correction.id}/change/" 
@@ -194,18 +204,45 @@ class CorrectionListView(View):
                     width: 100%;
                     border-collapse: collapse;
                     margin-top: 20px;
+                    font-family: monospace;
                 }}
                 th, td {{
                     padding: 12px;
-                    text-align: left;
+                    text-align: center;
                     border-bottom: 1px solid #ddd;
+                    font-family: monospace !important;
+                    vertical-align: top;
                 }}
                 th {{
                     background: #f8f9fa;
                     font-weight: bold;
+                    font-family: monospace !important;
+                    text-align: center;
                 }}
                 tr:hover {{
                     background: #f8f9fa;
+                }}
+                .monospace-cell {{
+                    font-family: monospace !important;
+                    text-align: center;
+                    padding: 4px 6px;
+                    border: 1px solid #eee;
+                    border-radius: 3px;
+                    background: transparent;
+                    line-height: 1.4;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    word-break: keep-all;
+                }}
+                .space {{
+                    color: #aaa;
+                    opacity: 0.7;
+                    font-weight: bold;
+                    background: rgba(255, 255, 255, 0.6);
+                    padding: 0 1px;
+                    border-radius: 2px;
+                    font-size: 0.9em;
                 }}
                 .create-button {{
                     background: #28a745;
@@ -244,7 +281,7 @@ class CorrectionListView(View):
             <div class="container">
                 <div class="header">
                     <h1>Таблица корректировок</h1>
-                    <p>Управление правилами корректировки учебных расписаний</p>
+                    <p>Все текстовые поля отображаются в моноширинном шрифте. Пробелы отмечены как <span style="font-family: monospace; color: #aaa;">·</span></p>
                 </div>
 
                 <div class="menu">
@@ -255,7 +292,7 @@ class CorrectionListView(View):
                     <a href="/export/schedule/" class="schedule-export-btn">Экспорт расписания</a>
                 </div>
 
-                {f"<div class='success'><strong>Готово к экспорту:</strong> Расписание загружено</div>" if has_uploaded_schedule else "<div class='warning'><strong>Внимание:</strong> Сначала загрузите расписание через страницу 'Загрузка расписания', затем экспортируйте его с примененными корректировками.</div>"}
+                {f"<div class='success'><strong>Готово к экспорту:</strong> Расписание загружено (стили сохранены)</div>" if has_uploaded_schedule else "<div class='warning'><strong>Внимание:</strong> Загрузите файл в формате <code>.xlsx</code>, чтобы экспортировать расписание с корректировками и стилями.</div>"}
 
                 <table>
                     <thead>
@@ -280,40 +317,40 @@ class CorrectionListView(View):
 
     def get_status_color(self, status):
         if status == Correction.STATUS_PENDING:
-            return "background-color: #fff3cd;"
+            return "background-color: #fff9c4; color: #000;"
         elif status == Correction.STATUS_APPROVED:
-            return "background-color: #d4edda;"
+            return "background-color: #e8f5e9; color: #000;"
         elif status == Correction.STATUS_INVALID:
-            return "background-color: #f8d7da; color: #721c24;"
+            return "background-color: #ffcdd2; color: #000;"
         return ""
 
 
 def upload_schedule(request):
-    global last_uploaded_file_path, last_uploaded_file_is_xlsx
+    global last_uploaded_file_path
 
     if request.method == 'POST' and request.FILES.get('schedule_file'):
         uploaded_file = request.FILES['schedule_file']
         filename = uploaded_file.name.lower()
 
-        if not (filename.endswith('.xls') or filename.endswith('.xlsx')):
-            return HttpResponse("Ошибка: загрузите файл Excel (.xls или .xlsx)")
-
-        is_xlsx = filename.endswith('.xlsx')
-        last_uploaded_file_is_xlsx = is_xlsx
+        if not filename.endswith('.xlsx'):
+            return HttpResponse(
+                "❌ Ошибка: поддерживается только формат <strong>.xlsx</strong> (Excel 2007 и новее).<br>"
+                "Сохраните ваш файл как «Книга Excel (.xlsx)» в Microsoft Excel или LibreOffice и загрузите заново.",
+                content_type="text/html; charset=utf-8"
+            )
 
         try:
-            suffix = '.xlsx' if is_xlsx else '.xls'
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_file:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
                 for chunk in uploaded_file.chunks():
-                    tmp_file.write(chunk)
-                tmp_file_path = tmp_file.name
+                    tmp.write(chunk)
+                last_uploaded_file_path = tmp.name
 
-            last_uploaded_file_path = tmp_file_path
-
-            if is_xlsx:
-                df = pd.read_excel(tmp_file_path, engine='openpyxl', header=None)
-            else:
-                df = pd.read_excel(tmp_file_path, engine='xlrd', header=None)
+            wb_preview = load_workbook(last_uploaded_file_path, read_only=True, data_only=True)
+            ws_preview = wb_preview.active
+            rows = list(ws_preview.iter_rows(values_only=True))
+            row_count = len(rows)
+            col_count = max(len(row) for row in rows) if rows else 0
+            wb_preview.close()
 
             html_content = f"""
             <!DOCTYPE html>
@@ -331,19 +368,14 @@ def upload_schedule(request):
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Результат загрузки расписания</h1>
+                        <h1>✅ Файл успешно загружен!</h1>
                     </div>
                     <div class="success">
-                        <h3>Файл успешно загружен!</h3>
-                        <p><strong>Файл:</strong> {uploaded_file.name}</p>
-                        <p><strong>Формат:</strong> {'XLSX (сохранение стилей при экспорте)' if is_xlsx else 'XLS (экспорт без стилей)'}</p>
-                        <p><strong>Строк:</strong> {len(df)}</p>
-                        <p><strong>Колонок:</strong> {len(df.columns)}</p>
-                    </div>
-                    <div class="info-box">
-                        <h4>Информация:</h4>
-                        <p>Файл готов к экспорту с применёнными корректировками.</p>
-                        {'<p><strong>Стили (цвета, шрифты) будут сохранены.</strong></p>' if is_xlsx else '<p><strong>Стили из XLS не поддерживаются — экспорт будет без форматирования.</strong></p>'}
+                        <p><strong>Имя файла:</strong> {uploaded_file.name}</p>
+                        <p><strong>Формат:</strong> .xlsx</p>
+                        <p><strong>Строк:</strong> {row_count}</p>
+                        <p><strong>Колонок:</strong> {col_count}</p>
+                        <p style="color: #155724;"><strong>✅ Все стили (цвета, шрифты, границы) сохранены!</strong></p>
                     </div>
                     <div style="margin-top: 20px;">
                         <a href="/upload/" style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px;">
@@ -432,25 +464,22 @@ def upload_schedule(request):
         <div class="container">
             <div class="header">
                 <h1>Загрузка файла расписания</h1>
-                <p>Загрузите XLS/XLSX файл для просмотра данных</p>
+                <p>Только <strong>.xlsx</strong> (Excel 2007+)</p>
             </div>
             <div class="upload-form">
                 <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="{csrf_token}">
-                    <h3>Выберите файл Excel</h3>
+                    <h3>Выберите файл Excel (.xlsx)</h3>
                     <div class="file-input">
-                        <input type="file" name="schedule_file" accept=".xls,.xlsx" required style="font-size: 16px; padding: 10px;">
+                        <input type="file" name="schedule_file" accept=".xlsx" required style="font-size: 16px; padding: 10px;">
                     </div>
-                    <button type="submit" class="submit-btn">Загрузить и просмотреть</button>
+                    <button type="submit" class="submit-btn">Загрузить</button>
                 </form>
             </div>
             <div class="info">
-                <h4>Поддерживаемые форматы:</h4>
-                <ul>
-                    <li>Microsoft Excel (.xls, .xlsx)</li>
-                    <li>Файлы с расписанием занятий</li>
-                </ul>
-                <p><strong>Важно:</strong> Только файлы .xlsx сохраняют цвета и стили при экспорте.</p>
+                <h4>Важно:</h4>
+                <p>Поддерживается <strong>только формат .xlsx</strong>.</p>
+                <p>При экспорте будут сохранены все стили: цвета, шрифты, границы и объединённые ячейки.</p>
             </div>
             <div style="text-align: center; margin-top: 20px;">
                 <a href="/" style="color: #3498db; text-decoration: none;">← На главную</a>
@@ -461,72 +490,52 @@ def upload_schedule(request):
     """
     return HttpResponse(html_content, content_type="text/html; charset=utf-8")
 
+
 def apply_correction(subject: Item, hypotheses: List[Item], scope_id: int = 0) -> Item:
     from django.db.models import Q
 
-    # Найти корректировки по значению subject и scope
     corrections = Correction.objects.filter(
         subject__value=subject.value,
         scope_id=scope_id
     ).select_related('subject').prefetch_related('hypotheses', 'subject__context')
 
     if not corrections.exists():
-        # Нет корректировок → выбираем лучшую гипотезу или возвращаем оригинал
         if hypotheses:
             return max(hypotheses, key=lambda h: h.score)
         return subject
 
-    # Берём первую подходящую корректировку
     correction = corrections.first()
 
-    # Случай: APPROVED
     if correction.status == Correction.STATUS_APPROVED:
         approved_hyp = correction.hypotheses.filter(approved=True).first()
         current_score = approved_hyp.score if approved_hyp else -float('inf')
-
-        # Проверяем, есть ли гипотезы с лучшим score
         new_better_hypotheses = [h for h in hypotheses if h.score > current_score]
         if new_better_hypotheses:
-            # Добавляем их и переводим в PENDING
             for hyp in new_better_hypotheses:
                 correction.hypotheses.add(hyp)
             correction.status = Correction.STATUS_PENDING
             correction.save()
-
-        # Возвращаем подтверждённую, если есть
         if approved_hyp:
             return approved_hyp
-        # Иначе — лучшую из всех гипотез корректировки
         best_in_correction = correction.hypotheses.order_by('-score').first()
         return best_in_correction or subject
 
-    # Случай: PENDING
     elif correction.status == Correction.STATUS_PENDING:
-        # Добавляем все новые гипотезы
         for hyp in hypotheses:
             correction.hypotheses.add(hyp)
         correction.save()
-        # Возвращаем лучшую из всех
         best = correction.hypotheses.order_by('-score').first()
         return best or subject
 
-    # Случай: INVALID
     elif correction.status == Correction.STATUS_INVALID:
-        # Отключаем "фиксированные" гипотезы (но оставляем в БД)
         for hyp in correction.hypotheses.filter(suggested_by_reviewer=True):
             hyp.score = 0
             hyp.approved = False
             hyp.save()
-
-        # Добавляем новые гипотезы
         for hyp in hypotheses:
             correction.hypotheses.add(hyp)
-
-        # Переводим в PENDING
         correction.status = Correction.STATUS_PENDING
         correction.save()
-
-        # Возвращаем лучшую из входных гипотез, если есть
         if hypotheses:
             return max(hypotheses, key=lambda h: h.score)
         return subject
@@ -535,11 +544,6 @@ def apply_correction(subject: Item, hypotheses: List[Item], scope_id: int = 0) -
 
 
 def get_approved_correction_for_subject(subject_value: str, scope_id: int = 0) -> str:
-    """
-    Возвращает исправленное значение предмета, если есть утверждённая корректировка.
-    Иначе возвращает исходное значение.
-    Никогда не изменяет БД.
-    """
     try:
         correction = Correction.objects.filter(
             subject__value=subject_value,
@@ -553,12 +557,11 @@ def get_approved_correction_for_subject(subject_value: str, scope_id: int = 0) -
                 return approved_hyp.value
     except Exception:
         pass
-
     return subject_value
 
 
 def export_schedule_with_corrections(request):
-    global last_uploaded_file_path, last_uploaded_file_is_xlsx
+    global last_uploaded_file_path
 
     if not last_uploaded_file_path or not os.path.exists(last_uploaded_file_path):
         html_content = """
@@ -576,15 +579,15 @@ def export_schedule_with_corrections(request):
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Ошибка экспорта</h1>
+                    <h1>❌ Ошибка экспорта</h1>
                 </div>
                 <div class="error">
                     <h3>Расписание не загружено</h3>
-                    <p>Сначала загрузите Excel файл с расписанием через страницу загрузки.</p>
+                    <p>Сначала загрузите файл в формате <strong>.xlsx</strong>.</p>
                 </div>
                 <div style="margin-top: 20px;">
                     <a href="/upload/" style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px;">
-                        Перейти к загрузке расписания
+                        Перейти к загрузке
                     </a>
                     <a href="/" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px; margin-left: 10px;">
                         На главную
@@ -601,49 +604,33 @@ def export_schedule_with_corrections(request):
     filename = f'schedule_corrected_{timestamp}.xlsx'
 
     try:
-        if last_uploaded_file_is_xlsx:
-            wb = load_workbook(last_uploaded_file_path, data_only=True)
-            ws = wb.active
-
+        wb = load_workbook(last_uploaded_file_path)
+        for ws in wb.worksheets:
             for row in ws.iter_rows():
                 for cell in row:
                     if cell.value is not None and isinstance(cell.value, str):
-                        original_value = cell.value.strip()
+                        original_value = str(cell.value).strip()
                         corrected_value = get_approved_correction_for_subject(original_value, scope_id=0)
                         cell.value = corrected_value
 
-            wb.save(output)
-
-        else:
-            df = pd.read_excel(last_uploaded_file_path, engine='xlrd', header=None)
-
-            def correct_cell(x):
-                if isinstance(x, str):
-                    original_value = x.strip()
-                    return get_approved_correction_for_subject(original_value, scope_id=0)
-                return x
-
-            df_corrected = df.applymap(correct_cell)
-
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df_corrected.to_excel(writer, index=False, header=False)
+        wb.save(output)
 
     finally:
         if last_uploaded_file_path and os.path.exists(last_uploaded_file_path):
             os.unlink(last_uploaded_file_path)
         last_uploaded_file_path = None
-        last_uploaded_file_is_xlsx = True
 
     output.seek(0)
     response = HttpResponse(
         output.getvalue(),
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = f'attachment; filename={filename}'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 
 def export_corrections(request):
+    import pandas as pd
     corrections = Correction.objects.all().select_related('subject').prefetch_related('hypotheses', 'subject__context')
     data = []
     for correction in corrections:
